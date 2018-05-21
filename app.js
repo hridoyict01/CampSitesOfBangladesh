@@ -34,7 +34,7 @@ app.get("/campgrounds", (req, res) => {
         if (err) {
             console.log("Error bro");
         } else {
-            res.render("index", {
+            res.render("campgrounds/index", {
                 campgrounds
             });
         }
@@ -63,7 +63,7 @@ app.post("/campgrounds", (req, res) => {
 });
 
 app.get("/campgrounds/new", (req, res) => {
-    res.render("new.ejs");
+    res.render("campgrounds/new");
 });
 // Shows more info about the campground
 app.get("/campgrounds/:id", (req, res) => {
@@ -72,7 +72,7 @@ app.get("/campgrounds/:id", (req, res) => {
         if (err) {
             console.log("not found and " + err);
         } else {
-            res.render("show", {
+            res.render("campgrounds/show", {
                 campground: foundCampground
             });
         }
@@ -80,6 +80,45 @@ app.get("/campgrounds/:id", (req, res) => {
 
 });
 
+//===================//
+//Comment section
+//===================//
+
+app.get("/campgrounds/:id/comments/new", (req,res) => {
+    //find campground by id and send it to new form
+    var id = req.params.id;
+    Campground.findById(id, (err, campground) => {
+        if(err) {
+            console.log("hell");
+        } else {
+            res.render("comments/new", {campground});
+        }
+    });
+});
+
+app.post("/campgrounds/:id/comments", (req, res) => {
+    //loopup campground using id
+    console.log(req.body.comment);
+    var id = req.params.id;
+    Campground.findById(id, (err, campground) => {
+        if(err) {
+            console.log(err);
+        } else {
+            Comment.create(req.body.comment, (err, comment) => {
+                if(err) {
+                    console.log(err);
+                } else {
+                    campground.comments.push(comment);
+                    campground.save();
+                    res.redirect("/campgrounds/"+campground._id);
+                }
+            });
+        }
+    });
+    //create a new comment
+    //connect new commnet to campground
+    //redirect to camground show page
+});
 
 app.listen(config.port, () => {
     console.log("Server is on Port " + config.port);

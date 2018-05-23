@@ -75,7 +75,7 @@ router.get("/campgrounds/:id/edit",(req,res) => {
     });
     
 });
-
+//Update campground route
 router.put("/campgrounds/:id", (req,res) => {
     //find and update the campground
     var id = req.params.id;
@@ -93,8 +93,20 @@ router.put("/campgrounds/:id", (req,res) => {
     //redirect to show page
 });
 
+//Destroy campground route
 
-//Update campground route
+router.delete("/campgrounds/:id", (req,res) =>{
+    var id = req.params.id;
+    Campground.findByIdAndRemove(id, (err, campground) =>{
+        if(err) {
+            console.log(err);
+            res.redirect("/campgrounds");
+        } else {
+            res.redirect("/campgrounds");
+        }
+    });
+});
+
 
 
 

@@ -29,7 +29,8 @@ mongoose.connect("mongodb://localhost/yelp_camp", (err) => {
         console.log("successful");
     }
 });
-seedDB();
+//Seed database 
+// seedDB();
 
 //passport configuration
 app.use(require("express-session")({
@@ -51,6 +52,8 @@ app.use((req,res,next) =>{
     next();
 });
 
+
+//Roter implementation
 app.use(indexRoutes);
 app.use(campgroundRoutes);
 app.use(commentRoutes);

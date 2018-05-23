@@ -18,16 +18,26 @@ router.get("/campgrounds", (req, res) => {
     });
     // Pass them to the view
 });
-
-router.post("/campgrounds", (req, res) => {
+//new camp adding page
+router.get("/campgrounds/new", isLoggedIn, (req, res) => {
+    res.render("campgrounds/new");
+});
+//create campgrounds
+router.post("/campgrounds", isLoggedIn, (req, res) => {
 
     var name = req.body.name;
     var image = req.body.image;
     var description = req.body.description;
+    var author = {
+        id: req.user._id,
+        username: req.user.username
+    };
+
     var campground = {
         name,
         image,
-        description
+        description,
+        author
     };
     Campground.create(campground, (err, campground) => {
         if (err) {
@@ -39,9 +49,6 @@ router.post("/campgrounds", (req, res) => {
 
 });
 
-router.get("/campgrounds/new", (req, res) => {
-    res.render("campgrounds/new");
-});
 // Shows more info about the campground
 router.get("/campgrounds/:id", (req, res) => {
     var id = req.params.id;
